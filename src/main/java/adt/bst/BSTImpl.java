@@ -1,5 +1,7 @@
 package adt.bst;
 
+import adt.bt.BTNode;
+
 public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	protected BSTNode<T> root;
@@ -64,8 +66,24 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public void insert(T element) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		BSTNode<T> node = getRoot();
+		insert(node, element);
+	}
+
+	public void insert(BSTNode<T> node, T element) {
+		if (node.isEmpty()) {
+			node.setData(element);
+			node.setLeft(null);
+			node.setRight(null);
+
+		} else {
+			if (element.compareTo(node.getData()) < 0) {
+				insert((BSTNode<T>) node.getLeft(), element);
+			} else if (element.compareTo(node.getData()) > 0) {
+				insert((BSTNode<T>) node.getRight(), element);
+			}
+		}
+
 	}
 
 	@Override
@@ -91,20 +109,45 @@ public class BSTImpl<T extends Comparable<T>> implements BST<T> {
 
 	@Override
 	public BSTNode<T> sucessor(T element) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		BSTNode<T> k = search(element);
+		BSTNode<T> result = (BSTNode<T>) k.getRight();
+		
+		if (!k.getRight().isEmpty()) {
+			result = minimum();
+		}
+
+		return result;
 	}
 
 	@Override
 	public BSTNode<T> predecessor(T element) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		BSTNode<T> k = search(element);
+		if (!k.getLeft().isEmpty()) {
+			k = maximum();
+		}
+
+		return k;
 	}
 
 	@Override
 	public void remove(T element) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		BSTNode<T> node = search(element);
+
+		if (!node.isEmpty()) {
+			if (node.isLeaf()) {
+				node = null;
+			}
+
+			else if(node.getLeft().equals(null) && !node.getRight().equals(null) || !node.getLeft().equals(null) && node.getRight().equals(null)) {
+				if (!node.equals(getRoot())) {
+					
+				}
+			} else {
+				BSTNode<T> sucessor = sucessor(node.getData());
+				node.setData(sucessor.getData());
+				remove(sucessor.getData());
+			}
+		}
 	}
 
 	@Override
